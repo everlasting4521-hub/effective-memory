@@ -1,11 +1,7 @@
 ﻿{
-  "generated_at": "2026-09-13T00:14:47+09:00",
+  "generated_at": "2026-09-13T00:24:04+09:00",
   "timezone": "Asia/Tokyo",
   "meeting_days": [
-    {
-      "date": "20260912",
-      "races": 24
-    },
     {
       "date": "20260913",
       "races": 24
