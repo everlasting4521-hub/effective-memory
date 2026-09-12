@@ -20,9 +20,19 @@ if not SNAP.exists():
     st.warning("クラウド用予想データはまだありません。"); st.stop()
 
 data=json.loads(SNAP.read_text(encoding="utf-8"))
-gen=data.get("generated_at","")
-last=data.get("last_update","-")
-date=str(data.get("date",""))
+gen = data.get("generated_at", "")
+last = data.get("last_update", "-")
+date = str(data.get("date", ""))
+
+# last_update が無い場合は snapshot 生成時刻を表示
+if not last or last == "-":
+    if gen:
+        try:
+            last = datetime.fromisoformat(gen).strftime("%H:%M:%S")
+        except Exception:
+            last = gen
+    else:
+        last = "-"
 
 age_min=None
 try:
