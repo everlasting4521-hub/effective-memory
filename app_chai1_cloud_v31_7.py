@@ -29,6 +29,28 @@ if not INDEX.exists():
 
 idx = json.loads(INDEX.read_text(encoding="utf-8-sig"))
 meeting_days = [str(x.get("date","")) for x in idx.get("meeting_days",[]) if x.get("date")]
+
+# v31.9: 実際にクラウドへ保存されている日付も候補へ追加
+for p in CLOUD.glob("day_*.json"):
+    d = p.stem.replace("day_", "", 1)
+    if d.isdigit() and len(d) == 8:
+        meeting_days.append(d)
+
+for p in CLOUD.glob("snapshot_*.json"):
+    d = p.stem.replace("snapshot_", "", 1)
+    if d.isdigit() and len(d) == 8:
+        meeting_days.append(d)
+
+latest_path = CLOUD / "latest.json"
+if latest_path.exists():
+    try:
+        latest_meta = json.loads(latest_path.read_text(encoding="utf-8-sig"))
+        latest_date = str(latest_meta.get("date", "")).strip()
+        if latest_date.isdigit() and len(latest_date) == 8:
+            meeting_days.append(latest_date)
+    except Exception:
+        pass
+
 meeting_days = sorted(set(meeting_days))
 
 if not meeting_days:
