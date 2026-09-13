@@ -1,10 +1,10 @@
 {
   "version": "v31.2",
   "date": "20260912",
-  "generated_at": "2026-09-12T22:42:17",
-  "data_status": "LIVE",
-  "last_update": "19:34:27",
-  "next_check": "19:44:27",
+  "generated_at": "2026-09-13T00:14:45",
+  "data_status": "STALE",
+  "last_update": "00:01:47",
+  "next_check": "00:11:47",
   "battle_picks": [],
   "official_picks": [],
   "conditions": [
