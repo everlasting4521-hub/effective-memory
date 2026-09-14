@@ -51,7 +51,31 @@ if latest_path.exists():
     except Exception:
         pass
 
-meeting_days = sorted(set(meeting_days))
+if meeting_days:
+    st.markdown("### 📅 次回開催予定")
+
+    for m in meeting_days[:3]:
+        label = m.get("label", "-")
+        state = m.get("state", "確認中")
+        racecard_ready = bool(m.get("racecard_ready", False))
+        venues = m.get("venues") or []
+
+        icon = "✅" if racecard_ready else "⏳"
+
+        st.markdown(f"**{label}**　{icon} {state}")
+
+        if venues:
+            st.caption(
+                "開催場: " + "・".join(str(v) for v in venues)
+            )
+
+    if all(not bool(m.get("racecard_ready", False)) for m in meeting_days[:3]):
+        st.caption(
+            "現在は出馬表・枠順の公開待ちです。"
+            "公開後、自動で予測準備へ進みます。"
+        )
+else:
+    st.caption("次回開催予定を確認中です。")
 
 if not meeting_days:
     st.warning("開催日が登録されていません。")
