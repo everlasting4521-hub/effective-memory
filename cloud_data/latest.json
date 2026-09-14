@@ -1,14 +1,39 @@
 {
   "version": "v31.2",
-  "date": "20260914",
-  "generated_at": "2026-09-14T15:10:26",
-  "meeting": false,
-  "meeting_state": "本日はJRA開催なし",
-  "data_status": "NO_MEETING",
-  "last_update": "14:45:09",
-  "next_check": "14:55:09",
+  "date": "20260912",
+  "generated_at": "2026-09-14T15:22:01",
+  "meeting": true,
+  "meeting_state": "JRA開催日",
+  "data_status": "STALE",
+  "last_update": "00:01:47",
+  "next_check": "00:11:47",
   "battle_picks": [],
   "official_picks": [],
-  "conditions": [],
+  "conditions": [
+    {
+      "date": "2026-09-12",
+      "場所コード": 6,
+      "場所": "中山",
+      "天候コード": 2,
+      "天候": "曇",
+      "芝馬場コード": 3,
+      "芝馬場": "重",
+      "ダート馬場コード": 3,
+      "ダート馬場": "重",
+      "最終発表": 9121444
+    },
+    {
+      "date": "2026-09-12",
+      "場所コード": 9,
+      "場所": "阪神",
+      "天候コード": 1,
+      "天候": "晴",
+      "芝馬場コード": 1,
+      "芝馬場": "良",
+      "ダート馬場コード": 1,
+      "ダート馬場": "良",
+      "最終発表": 9121405
+    }
+  ],
   "result_rows": 0
 }
