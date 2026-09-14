@@ -82,12 +82,34 @@ selected_date = st.selectbox(
     format_func=label_date,
 )
 
-snap_path = CLOUD / f"day_{selected_date}.json"
-if not snap_path.exists():
-    st.warning(f"{label_date(selected_date)} のクラウドデータがありません。")
-    st.stop()
+# v31.9: day → snapshot → latest の順で読み込む
+candidates = [
+    CLOUD / f"day_{selected_date}.json",
+    CLOUD / f"snapshot_{selected_date}.json",
+]
 
-data = json.loads(snap_path.read_text(encoding="utf-8-sig"))
+snap_path = next((p for p in candidates if p.exists()), None)
+
+if snap_path is not None:
+    data = json.loads(snap_path.read_text(encoding="utf-8-sig"))
+else:
+    latest_path = CLOUD / "latest.json"
+
+    if latest_path.exists():
+        latest_data = json.loads(
+            latest_path.read_text(encoding="utf-8-sig")
+        )
+
+        if str(latest_data.get("date", "")).strip() == selected_date:
+            data = latest_data
+        else:
+            data = None
+    else:
+        data = None
+
+    if data is None:
+        st.warning(f"{label_date(selected_date)} のクラウドデータがありません。")
+        st.stop()
 
 gen = data.get("generated_at", "")
 last = data.get("last_update", "-")
@@ -123,6 +145,16 @@ if age_min is not None and selected_date == today:
 else:
     st.caption(f"{label_date(selected_date)} の予想データ")
 
+no_meeting = (
+    data.get("meeting") is False
+    or data.get("data_status") == "NO_MEETING"
+)
+
+if no_meeting:
+    st.markdown("## 🏇 本日はJRA開催なし")
+    st.info("本日は中央競馬の開催がありません。予想・オッズ更新・買い目生成は行いません。")
+    st.caption("次の開催日は自動取得後、この画面に表示されます。")
+    st.stop()
 heading = "🔥 本日の勝負レース" if selected_date == today else "📅 選択日の勝負レース"
 st.markdown(f"## {heading}")
 
