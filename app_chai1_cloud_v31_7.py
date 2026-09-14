@@ -54,26 +54,60 @@ if latest_path.exists():
 if meeting_days:
     st.markdown("### 📅 次回開催予定")
 
+    valid_meetings = []
+
     for m in meeting_days[:3]:
-        label = m.get("label", "-")
-        state = m.get("state", "確認中")
-        racecard_ready = bool(m.get("racecard_ready", False))
-        venues = m.get("venues") or []
+
+        # 念のため旧形式・異常形式も吸収
+        if isinstance(m, dict):
+            item = m
+
+        elif isinstance(m, str):
+            item = {
+                "date": m,
+                "label": (
+                    f"{m[0:4]}/{m[4:6]}/{m[6:8]}"
+                    if len(m) == 8 and m.isdigit()
+                    else m
+                ),
+                "racecard_ready": False,
+                "state": "出馬表公開待ち",
+                "venues": [],
+            }
+
+        else:
+            continue
+
+        valid_meetings.append(item)
+
+        label = item.get("label", "-")
+        state = item.get("state", "確認中")
+        racecard_ready = bool(
+            item.get("racecard_ready", False)
+        )
+        venues = item.get("venues") or []
 
         icon = "✅" if racecard_ready else "⏳"
 
-        st.markdown(f"**{label}**　{icon} {state}")
+        st.markdown(
+            f"**{label}**　{icon} {state}"
+        )
 
         if venues:
             st.caption(
-                "開催場: " + "・".join(str(v) for v in venues)
+                "開催場: "
+                + "・".join(str(v) for v in venues)
             )
 
-    if all(not bool(m.get("racecard_ready", False)) for m in meeting_days[:3]):
+    if valid_meetings and all(
+        not bool(m.get("racecard_ready", False))
+        for m in valid_meetings
+    ):
         st.caption(
             "現在は出馬表・枠順の公開待ちです。"
             "公開後、自動で予測準備へ進みます。"
         )
+
 else:
     st.caption("次回開催予定を確認中です。")
 
