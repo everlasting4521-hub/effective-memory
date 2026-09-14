@@ -160,8 +160,67 @@ no_meeting = (
 
 if no_meeting:
     st.markdown("## 🏇 本日はJRA開催なし")
-    st.info("本日は中央競馬の開催がありません。予想・オッズ更新・買い目生成は行いません。")
-    st.caption("次の開催日は自動取得後、この画面に表示されます。")
+    st.info(
+        "本日は中央競馬の開催がありません。"
+        "予想・オッズ更新・買い目生成は行いません。"
+    )
+
+    upcoming_path = CLOUD / "upcoming_meetings.json"
+
+    if upcoming_path.exists():
+        try:
+            upcoming_data = json.loads(
+                upcoming_path.read_text(encoding="utf-8-sig")
+            )
+
+            meeting_days = upcoming_data.get("meeting_days") or []
+
+            if meeting_days:
+                next_meeting = meeting_days[0]
+
+                next_label = next_meeting.get("label", "-")
+                next_state = next_meeting.get("state", "確認中")
+                racecard_ready = bool(
+                    next_meeting.get("racecard_ready", False)
+                )
+                venues = next_meeting.get("venues") or []
+
+                st.markdown("### 📅 次回開催候補")
+
+                c1, c2 = st.columns(2)
+                c1.metric("開催候補日", next_label)
+                c2.metric(
+                    "準備状況",
+                    "✅ 出馬表公開済み"
+                    if racecard_ready
+                    else "⏳ 出馬表公開待ち",
+                )
+
+                if venues:
+                    st.caption(
+                        "開催場: " + "・".join(str(v) for v in venues)
+                    )
+
+                if racecard_ready:
+                    st.success(
+                        "出馬表を確認できました。"
+                        "chai1号の予測準備対象です。"
+                    )
+                else:
+                    st.caption(
+                        "出馬表・枠順の公開を待っています。"
+                        "公開確認後に自動準備へ移行します。"
+                    )
+
+            else:
+                st.caption("次回開催候補を確認中です。")
+
+        except Exception:
+            st.caption("次回開催情報を確認中です。")
+
+    else:
+        st.caption("次回開催情報を確認中です。")
+
     st.stop()
 heading = "🔥 本日の勝負レース" if selected_date == today else "📅 選択日の勝負レース"
 st.markdown(f"## {heading}")
