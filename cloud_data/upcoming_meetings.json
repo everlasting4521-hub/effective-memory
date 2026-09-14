@@ -1,6 +1,15 @@
 {
-  "generated_at": "2026-09-14T13:36:03",
+  "generated_at": "2026-09-14T13:41:27",
   "start_date": "20260914",
   "search_days": 14,
-  "meeting_days": []
+  "meeting_days": [
+    {
+      "date": "20260919",
+      "label": "2026/09/19",
+      "candidate": true,
+      "racecard_ready": false,
+      "state": "出馬表公開待ち",
+      "venues": []
+    }
+  ]
 }
