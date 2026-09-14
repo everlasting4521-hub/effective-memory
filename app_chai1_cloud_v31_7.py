@@ -137,7 +137,15 @@ except Exception:
 is_live = (selected_date == today and age_min is not None and age_min <= 20)
 
 c1, c2 = st.columns(2)
-c1.metric("データ", "🟢 LIVE" if is_live else "📦 保存データ")
+
+if data.get("meeting") is False or data.get("data_status") == "NO_MEETING":
+    data_label = "⚪ 非開催日"
+elif is_live:
+    data_label = "🟢 LIVE"
+else:
+    data_label = "📦 保存データ"
+
+c1.metric("データ", data_label)
 c2.metric("最終更新", last)
 
 if age_min is not None and selected_date == today:
